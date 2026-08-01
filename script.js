@@ -101,20 +101,28 @@ function shuffle(arr){
 function initPuzzle(){
   const area = $("#puzzle-area");
   const continueBtn = $("#puzzle-continue");
-  let wordIndex = 0;
+  const meetWrap = $("#puzzle-meet");
+  const words = CONFIG.puzzleWords;
+  const labels = ["his name", "her name"];
 
-  function renderWord(){
-    area.innerHTML = "";
-    const word = CONFIG.puzzleWords[wordIndex];
-    const label = wordIndex === 0 ? "his name" : "her name";
+  area.innerHTML = "";
+  meetWrap.hidden = true;
+  continueBtn.hidden = true;
 
-    const wrap = document.createElement("div");
-    wrap.className = "puzzle-word";
+  const intro = document.createElement("p");
+  intro.className = "puzzle-hint";
+  intro.textContent = "Tap the letters below to spell out both names — they're all mixed together 👇";
+  area.appendChild(intro);
+
+  const rowsWrap = document.createElement("div");
+  const slotRows = words.map((word, wi) => {
+    const row = document.createElement("div");
+    row.className = "puzzle-word";
 
     const lbl = document.createElement("div");
     lbl.className = "puzzle-label";
-    lbl.textContent = `Unscramble ${label}`;
-    wrap.appendChild(lbl);
+    lbl.textContent = labels[wi];
+    row.appendChild(lbl);
 
     const slots = document.createElement("div");
     slots.className = "slots";
@@ -124,54 +132,76 @@ function initPuzzle(){
       slots.appendChild(s);
       return s;
     });
-    wrap.appendChild(slots);
+    row.appendChild(slots);
+    rowsWrap.appendChild(row);
+    return { lbl, slotEls };
+  });
+  area.appendChild(rowsWrap);
 
-    const tiles = document.createElement("div");
-    tiles.className = "tiles";
-    const letters = shuffle([...word]);
-    let filled = [];
+  const tilesWrap = document.createElement("div");
+  tilesWrap.className = "tiles";
+  area.appendChild(tilesWrap);
 
-    letters.forEach((letter) => {
-      const tile = document.createElement("button");
-      tile.className = "tile";
-      tile.type = "button";
-      tile.textContent = letter;
-      tile.addEventListener("click", () => {
-        if(tile.classList.contains("used")) return;
-        filled.push(letter);
-        tile.classList.add("used");
-        const idx = filled.length - 1;
-        slotEls[idx].textContent = letter;
-        slotEls[idx].classList.add("filled");
+  const hint = document.createElement("p");
+  hint.className = "puzzle-hint";
+  area.appendChild(hint);
 
-        if(filled.length === word.length){
-          const attempt = filled.join("");
-          if(attempt === word){
-            setTimeout(() => {
-              wordIndex++;
-              if(wordIndex < CONFIG.puzzleWords.length){
-                renderWord();
-              } else {
-                area.innerHTML = `<p class="puzzle-solved-badge">✓ Solved! It's you two 💕</p>`;
-                continueBtn.hidden = false;
-              }
-            }, 400);
-          } else {
-            setTimeout(() => {
-              filled = [];
-              slotEls.forEach(s => { s.textContent = ""; s.classList.remove("filled"); });
-              tiles.querySelectorAll(".tile").forEach(t => t.classList.remove("used"));
-            }, 500);
-          }
-        }
-      });
-      tiles.appendChild(tile);
+  const progressIdx = words.map(() => 0);
+  const allLetters = shuffle(words.flatMap(w => [...w]));
+
+  function wordDone(wi){ return progressIdx[wi] === words[wi].length; }
+  function bothDone(){ return words.every((_, wi) => wordDone(wi)); }
+
+  allLetters.forEach((letter) => {
+    const tile = document.createElement("button");
+    tile.className = "tile";
+    tile.type = "button";
+    tile.textContent = letter;
+    tile.addEventListener("click", () => {
+      if(tile.classList.contains("used")) return;
+
+      let targetWord = -1;
+      for(let wi = 0; wi < words.length; wi++){
+        if(!wordDone(wi) && words[wi][progressIdx[wi]] === letter){ targetWord = wi; break; }
+      }
+
+      if(targetWord === -1){
+        tile.classList.remove("wrong-tap");
+        void tile.offsetWidth;
+        tile.classList.add("wrong-tap");
+        hint.textContent = "Not that one yet — try a different letter 😊";
+        return;
+      }
+
+      hint.textContent = "";
+      tile.classList.add("used");
+      const { lbl, slotEls } = slotRows[targetWord];
+      const idx = progressIdx[targetWord];
+      slotEls[idx].textContent = letter;
+      slotEls[idx].classList.add("filled");
+      progressIdx[targetWord]++;
+
+      if(wordDone(targetWord)){
+        lbl.classList.add("solved");
+        lbl.textContent = `${labels[targetWord]} ✓`;
+      }
+
+      if(bothDone()){
+        setTimeout(showMeeting, 500);
+      }
     });
-    wrap.appendChild(tiles);
-    area.appendChild(wrap);
+    tilesWrap.appendChild(tile);
+  });
+
+  function showMeeting(){
+    area.hidden = true;
+    meetWrap.hidden = false;
+    $("#meet-him").textContent = CONFIG.names.him;
+    $("#meet-her").textContent = CONFIG.names.her;
+    burstConfetti(50);
+    setTimeout(() => { continueBtn.hidden = false; }, 1500);
   }
 
-  renderWord();
   continueBtn.addEventListener("click", () => {
     initQuestions();
     showScreen("#screen-questions");

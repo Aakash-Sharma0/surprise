@@ -188,7 +188,15 @@ body{
   font-size:1.15rem;
   color:var(--maroon);
 }
-.slot.filled{ border-color:var(--pink-600); }
+.slot.filled{
+  border-color:var(--pink-600);
+  animation: slotPop .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes slotPop{
+  0%{ transform:scale(1.5); color:var(--pink-600); }
+  100%{ transform:scale(1); }
+}
+.puzzle-label.solved{ color:#3f9b5f; }
 
 .tiles{
   display:flex;
@@ -210,12 +218,76 @@ body{
   transition:transform .12s ease, opacity .12s ease;
 }
 .tile:active{ transform:scale(.9); }
-.tile.used{ opacity:0; pointer-events:none; }
+.tile.used{ opacity:0; transform:scale(.4); pointer-events:none; }
+.tile.wrong-tap{ animation: shake .35s ease; }
 
 .puzzle-solved-badge{
   color:#3f9b5f;
   font-weight:600;
   font-size:.9rem;
+}
+
+.puzzle-hint{
+  min-height:16px;
+  font-size:.8rem;
+  color:var(--pink-600);
+  font-weight:500;
+  margin-top:2px;
+}
+
+/* ---------- name-meeting animation ---------- */
+.meet-wrap{
+  padding:10px 0 4px;
+  animation: fadeUp .5s ease both;
+}
+.meet-names{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
+}
+.meet-name{
+  font-family:'Great Vibes', cursive;
+  font-size:clamp(1.8rem, 9vw, 2.6rem);
+  color:var(--maroon);
+  opacity:0;
+}
+.meet-left{ animation: slideInLeft .7s cubic-bezier(.22,1,.36,1) forwards; }
+.meet-right{ animation: slideInRight .7s cubic-bezier(.22,1,.36,1) forwards; }
+.meet-heart{
+  font-size:clamp(1.6rem, 8vw, 2.2rem);
+  display:inline-block;
+  opacity:0;
+  transform:scale(0);
+  animation:
+    heartPop .5s cubic-bezier(.34,1.56,.64,1) .55s forwards,
+    heartBeat 1s ease-in-out 1.1s infinite;
+}
+.meet-caption{
+  font-size:.9rem;
+  color:#6b3350;
+  opacity:0;
+  animation: fadeUp .6s ease .9s forwards;
+}
+
+@keyframes slideInLeft{
+  from{ transform:translateX(-70px); opacity:0; }
+  to{ transform:translateX(0); opacity:1; }
+}
+@keyframes slideInRight{
+  from{ transform:translateX(70px); opacity:0; }
+  to{ transform:translateX(0); opacity:1; }
+}
+@keyframes heartPop{
+  0%{ transform:scale(0); opacity:0; }
+  70%{ transform:scale(1.3); opacity:1; }
+  100%{ transform:scale(1); opacity:1; }
+}
+@keyframes heartBeat{
+  0%,100%{ transform:scale(1); }
+  50%{ transform:scale(1.18); }
 }
 
 /* ---------- questions ---------- */

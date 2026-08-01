@@ -41,6 +41,7 @@ const CONFIG = {
       "Happy Girlfriend's Day. Today's just a date on the calendar, but you turn every ordinary day into something worth remembering — and I wanted to make one day that's entirely, unmistakably about you.",
       "Every little thing about us — the dumb jokes, the late-night calls, the way you make hard days feel lighter just by being there — I don't take any of it for granted. This tiny website is nowhere near enough to show it, but it's a start.",
       "Thank you for being exactly who you are. I love you more today than yesterday, and I'm just getting started.",
+      "And whatever happens, wherever life takes us — I need you to know I will always be with you. Just trust me on that. Everything will be fine, and I am never going to break your trust. You're not just a girl to me, Komal. You are my whole world.",
     ],
     signature: "Forever yours, Aakash 🤍"
   }

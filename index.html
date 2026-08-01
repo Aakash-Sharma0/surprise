@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>For Komal, With Love</title>
+<meta name="description" content="A little surprise for Komal, from Aakash.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="hearts-bg" aria-hidden="true"></div>
+
+<main id="app">
+
+  <!-- SCREEN 1: PUZZLE -->
+  <section class="screen active" id="screen-puzzle">
+    <div class="card">
+      <p class="eyebrow">a little something for</p>
+      <h1 class="script-title">Girlfriend's Day</h1>
+      <p class="sub">Before anything else opens... unscramble two very important names 👀</p>
+
+      <div id="puzzle-area"></div>
+
+      <button class="btn btn-primary" id="puzzle-continue" hidden>Continue ➜</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: QUESTIONS -->
+  <section class="screen" id="screen-questions">
+    <div class="card">
+      <div class="progress" id="q-progress"></div>
+      <h2 id="q-text" class="q-text"></h2>
+      <div id="q-options" class="q-options"></div>
+      <p class="q-hint" id="q-hint"></p>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: VIDEOS -->
+  <section class="screen" id="screen-videos">
+    <div class="card card-video">
+      <h2 class="script-title small">Watch this, Komal 🎬</h2>
+
+      <div id="video-gate">
+        <button class="btn btn-primary" id="video-start-btn">▶ Tap to Play</button>
+      </div>
+
+      <div id="video-wrap" hidden>
+        <video id="video1" playsinline webkit-playsinline src="assets/video1.mp4" poster="assets/video1-poster.jpg"></video>
+        <video id="video2" playsinline webkit-playsinline src="assets/video2.mp4" poster="assets/video2-poster.jpg" hidden></video>
+        <p class="video-fallback" id="video-fallback" hidden>
+          Video not found yet — drop your files into <code>/assets/</code> as
+          <code>video1.mp4</code> and <code>video2.mp4</code>.
+        </p>
+        <button class="btn btn-ghost" id="video-tap-continue" hidden>Tap to continue ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: LETTER -->
+  <section class="screen" id="screen-letter">
+    <div class="card card-letter">
+      <div class="photo-frame" id="photo-frame">
+        <img id="letter-photo" src="assets/photo.jpg" alt="Us" onerror="this.style.display='none'; document.getElementById('photo-placeholder').hidden=false;">
+        <div id="photo-placeholder" class="photo-placeholder" hidden>
+          <span>📷</span>
+          <small>add assets/photo.jpg</small>
+        </div>
+      </div>
+
+      <h2 class="script-title">Happy Girlfriend's Day</h2>
+      <h3 class="script-title small" id="letter-name">Komal ❤️</h3>
+
+      <div class="letter-body" id="letter-body"></div>
+
+      <p class="signature" id="letter-signature"></p>
+
+      <button class="btn btn-ghost" id="replay-btn">Replay ↻</button>
+    </div>
+  </section>
+
+</main>
+
+<div id="confetti-layer" aria-hidden="true"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

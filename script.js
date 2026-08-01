@@ -9,10 +9,12 @@ const CONFIG = {
 
   questions: [
     {
-      text: "Guess what today is... 🤔",
-      options: ["Just another Tuesday", "National Holiday", "Girlfriend's Day ❤️"],
-      correct: 2,
-      wrongReplies: ["Nope, try again 😏", "Not even close, silly."]
+      type: "slider",
+      text: "How much do you like him? 😏",
+      min: 0,
+      max: 100,
+      start: 80,
+      whyPlaceholder: "Why? (be honest 👀)"
     },
     {
       text: `How much does ${"Aakash"} love ${"Komal"}?`,
@@ -239,6 +241,14 @@ function initQuestions(){
     qHint.textContent = "";
     qOptions.innerHTML = "";
 
+    if(q.type === "slider"){
+      renderSliderQuestion(q);
+    } else {
+      renderChoiceQuestion(q);
+    }
+  }
+
+  function renderChoiceQuestion(q){
     q.options.forEach((opt, i) => {
       const btn = document.createElement("button");
       btn.className = "btn-option";
@@ -262,6 +272,57 @@ function initQuestions(){
       });
       qOptions.appendChild(btn);
     });
+  }
+
+  function renderSliderQuestion(q){
+    const wrap = document.createElement("div");
+    wrap.className = "slider-wrap";
+
+    const value = document.createElement("div");
+    value.className = "slider-value";
+    value.textContent = `${q.start}%`;
+    wrap.appendChild(value);
+
+    const range = document.createElement("input");
+    range.type = "range";
+    range.className = "q-range";
+    range.min = q.min;
+    range.max = q.max;
+    range.value = q.start;
+    range.style.setProperty("--fill", `${q.start}%`);
+    range.addEventListener("input", () => {
+      value.textContent = `${range.value}%`;
+      range.style.setProperty("--fill", `${range.value}%`);
+    });
+    wrap.appendChild(range);
+
+    const labels = document.createElement("div");
+    labels.className = "slider-labels";
+    labels.innerHTML = `<span>not really</span><span>obsessed 💗</span>`;
+    wrap.appendChild(labels);
+
+    qOptions.appendChild(wrap);
+
+    const why = document.createElement("textarea");
+    why.className = "q-why";
+    why.placeholder = q.whyPlaceholder || "Why?";
+    qOptions.appendChild(why);
+
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "btn btn-primary";
+    nextBtn.type = "button";
+    nextBtn.textContent = "Next ➜";
+    nextBtn.addEventListener("click", () => {
+      if(why.value.trim().length === 0){
+        qHint.textContent = "Tell him why first 😊";
+        why.focus();
+        return;
+      }
+      qHint.textContent = "";
+      current++;
+      renderQuestion();
+    });
+    qOptions.appendChild(nextBtn);
   }
 
   renderQuestion();

@@ -13,8 +13,7 @@ const CONFIG = {
       text: "How much do you like him? 😏",
       min: 0,
       max: 100,
-      start: 80,
-      whyPlaceholder: "Why? (be honest 👀)"
+      start: 0
     },
     {
       text: `How much does ${"Aakash"} love ${"Komal"}?`,
@@ -303,22 +302,11 @@ function initQuestions(){
 
     qOptions.appendChild(wrap);
 
-    const why = document.createElement("textarea");
-    why.className = "q-why";
-    why.placeholder = q.whyPlaceholder || "Why?";
-    qOptions.appendChild(why);
-
     const nextBtn = document.createElement("button");
     nextBtn.className = "btn btn-primary";
     nextBtn.type = "button";
     nextBtn.textContent = "Next ➜";
     nextBtn.addEventListener("click", () => {
-      if(why.value.trim().length === 0){
-        qHint.textContent = "Tell him why first 😊";
-        why.focus();
-        return;
-      }
-      qHint.textContent = "";
       current++;
       renderQuestion();
     });
